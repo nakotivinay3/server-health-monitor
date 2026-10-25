@@ -73,3 +73,40 @@ This version monitors the Linux environment in which it runs. When run through W
 ## Author
 
 Vinay — [GitHub](https://github.com/nakotivinay3)
+## Automated Monitoring with Cron
+
+The Server Health Monitor can run automatically every five minutes using a Linux cron job.
+
+### Setup
+
+1. Open the cron scheduler:
+
+   ```bash
+   crontab -e
+   ```
+
+2. Add the following entry, replacing `vinay` if your Linux username is different:
+
+   ```cron
+   */5 * * * * cd /home/vinay/devOps/projects/server-health-monitor && /home/vinay/devOps/projects/server-health-monitor/.venv/bin/python monitor.py >> /home/vinay/devOps/projects/server-health-monitor/cron.log 2>&1
+   ```
+
+3. Save and exit the editor.
+
+### Verify
+
+Check the scheduled jobs:
+
+```bash
+crontab -l
+```
+
+View the output produced by scheduled runs:
+
+```bash
+cat ~/devOps/projects/server-health-monitor/cron.log
+```
+
+The log records the timestamp and CPU, memory, and disk usage reported by each run.
+
+**Note:** This setup assumes cron is running in the Linux environment and the virtual environment exists at the specified path. In WSL, scheduled jobs may not run while the Linux environment is stopped.
