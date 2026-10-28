@@ -1,10 +1,11 @@
+import os
 import psutil
 import logging
 from datetime import datetime
 
 
-def get_status(usage):
-    if usage > 80:
+def get_status(usage,threshold=80):
+    if usage > threshold:
         return "WARNING"
     else:
         return "HEALTHY"
@@ -16,6 +17,8 @@ def main():
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s"
     )
+    threshold = float(os.getenv("WARNING_THRESHOLD", "80"))
+
 
     print("=== Server Health Monitor ===")
 
@@ -33,7 +36,7 @@ def main():
         ("Memory", memory.percent),
         ("Disk", disk.percent),
     ]:
-        status = get_status(usage)
+        status = get_status(usage,threshold)
 
         if status == "WARNING":
             message = f"WARNING: High {name} usage: {usage}%"

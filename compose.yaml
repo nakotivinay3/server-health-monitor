@@ -1,0 +1,6 @@
+services:
+  server-health-monitor:
+    build: .
+    image: server-health-monitor
+    environment:
+      WARNING_THRESHOLD: "80"
