@@ -1,112 +1,86 @@
 # Server Health Monitoring System
 
-A beginner-friendly Python project that monitors CPU, memory, and disk usage in a Linux environment.
+A Python-based DevOps project that monitors CPU, memory, and disk usage in a Linux environment.
 
 ## Features
 
-- Monitors CPU usage.
-- Checks memory utilization.
-- Checks disk utilization.
-- Displays health status in the terminal.
-- Logs health information and warnings with timestamps.
-- Uses a configurable threshold of 80% for high resource usage.
+- CPU, memory, and disk monitoring
+- HEALTHY and WARNING status reporting
+- Timestamped logging
+- Configurable warning threshold
+- Docker and Docker Compose support
+- Automated tests using pytest
+- Scheduled execution using cron
 
-## Technologies Used
+## Technologies
 
-- Python 3
-- psutil
-- Linux / Ubuntu
-- Git and GitHub
-
-## Requirements
-
-- Python 3.12 or compatible Python 3 version
-- pip
-- Linux or Ubuntu environment
+Python 3.12, psutil, pytest, Linux/Ubuntu, Docker, Docker Compose, Git, GitHub, and cron.
 
 ## Installation
 
 Clone the repository:
 
-```bash
-git clone https://github.com/nakotivinay3/server-health-monitor.git
-cd server-health-monitor
-```
+    git clone https://github.com/nakotivinay3/server-health-monitor.git
+    cd server-health-monitor
 
 Create and activate a virtual environment:
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
 
-Install dependencies:
+## Run Locally
 
-```bash
-pip install -r requirements.txt
-```
+    python3 monitor.py
 
-## Run the Project
+## Run Tests
 
-```bash
-python monitor.py
-```
+    python3 -m pytest test_monitor.py -v
 
-The program displays CPU, memory, and disk usage, then reports whether each resource is healthy or above the configured threshold.
+## Run with Docker
+
+    docker build -t server-health-monitor .
+    docker run --rm server-health-monitor
+
+## Run with Docker Compose
+
+    docker compose config
+    docker compose run --build --rm server-health-monitor
+
+## Configure the Warning Threshold
+
+The default threshold is 80%, configured in compose.yaml using WARNING_THRESHOLD.
+
+To test with a threshold of 1%:
+
+    docker compose run --rm -e WARNING_THRESHOLD=1 server-health-monitor
+
+Usage above the selected threshold produces a WARNING.
 
 ## Logging
 
-The program writes timestamped health information and warnings to `health.log`. This generated log file is excluded from Git using `.gitignore`.
+The application writes timestamped messages to health.log. Temporary Docker containers may lose their internal logs when removed unless persistent storage is configured.
+
+## Cron Scheduling
+
+Cron can schedule the monitor to run every five minutes. Check configured jobs using:
+
+    crontab -l
+
+Ensure the Linux environment and required services are running for scheduled jobs to execute.
 
 ## Scope and Limitations
 
-This version monitors the Linux environment in which it runs. When run through WSL, the readings represent the environment visible to the script; they should not be interpreted as complete monitoring of a remote production server.
+The monitor reports resource usage visible to the environment in which it runs. WSL or container readings are not a substitute for complete monitoring of a remote production server.
 
 ## Future Improvements
 
-- Add automated tests.
-- Make the warning threshold configurable.
-- Add email or other alert notifications.
-- Add Docker support.
-- Integrate monitoring into a CI/CD workflow.
+- GitHub Actions CI/CD
+- Alert notifications
+- Cloud deployment
+- Kubernetes integration
+- Persistent monitoring and dashboards
 
 ## Author
 
-Vinay — [GitHub](https://github.com/nakotivinay3)
-## Automated Monitoring with Cron
-
-The Server Health Monitor can run automatically every five minutes using a Linux cron job.
-
-### Setup
-
-1. Open the cron scheduler:
-
-   ```bash
-   crontab -e
-   ```
-
-2. Add the following entry, replacing `vinay` if your Linux username is different:
-
-   ```cron
-   */5 * * * * cd /home/vinay/devOps/projects/server-health-monitor && /home/vinay/devOps/projects/server-health-monitor/.venv/bin/python monitor.py >> /home/vinay/devOps/projects/server-health-monitor/cron.log 2>&1
-   ```
-
-3. Save and exit the editor.
-
-### Verify
-
-Check the scheduled jobs:
-
-```bash
-crontab -l
-```
-
-View the output produced by scheduled runs:
-
-```bash
-cat ~/devOps/projects/server-health-monitor/cron.log
-```
-
-The log records the timestamp and CPU, memory, and disk usage reported by each run.
-
-**Note:** This setup assumes cron is running in the Linux environment and the virtual environment exists at the specified path. In WSL, scheduled jobs may not run while the Linux environment is stopped.
+Vinay — https://github.com/nakotivinay3
